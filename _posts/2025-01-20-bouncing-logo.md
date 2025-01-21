@@ -31,7 +31,7 @@ In particular, there are a few questions I want to answer. Given the starting po
 2. How many bounces are between each corner hit?
 3. Which corner will the logo hit next and how many bounces until it does?
 
-![office](/assets/img/DVD_logo_bouncing.gif){: .mx-auto.d-block :}
+![office]({{'/assets/img/DVD_logo_bouncing.gif' | relative_url}}){: .mx-auto.d-block :}
 
 ### Horizontal Case
 
@@ -42,7 +42,7 @@ to the right is at the same position as a point at $$w/2$$ moving to the left, t
 and the second one already in the second half of the trip being distance $$\frac {3w}2$$ from the starting point. The addition operator modulo $$2w$$ represents the location of the point with the 
 sum of the two distances. 
 
-<img src="/assets/img/back_and_forth.png" alt="drawing" width="300" style="display: block; margin: 0 auto"/>
+<img src={{'/assets/img/back_and_forth.png' | relative_url}} alt="drawing" width="300" style="display: block; margin: 0 auto"/>
 
 The horizontal movement case is simple. If the logo starts along the top edge, it will alternate between the top two corners. If it's along the bottom edge, it will alternate between the bottom two corners. 
 Otherwise, it never hits any corners. The vertical case is similar. 
@@ -56,7 +56,7 @@ ball has independent components, I can represent it's position as the external d
 the operation is modular addition of real numbers. You can think of the $$x$$ component representing the horizontal out-and-back distance and the $$y$$ component as the vertical out-and-back distance. 
 It may be helpful to think of the topology of this group as a torus.
 
-![torus](/assets/img/modular_2d.png){: .mx-auto.d-block :}
+![torus]({{'/assets/img/modular_2d.png' | relative_url}}){: .mx-auto.d-block :}
 
 The rectangular group $$[0, 2w) \oplus [0, 2h)$$ is isomorphic to the group $$[0, 2) \oplus [0, 2)$$ and for convenience, I'll be using this group. This is essentially normalizing the screen height 
 and width to create a unit square screen. Also, I'll be referring to a points location $$(x, y) \in [0, 2) \oplus [0, 2)$$ in terms of the group, not the physical location on the screen. So, a point 
@@ -71,7 +71,7 @@ $$n(x - x_0) = d(y - y_0)$$
 where the operation is real addition modulo 2. It's important that the coefficients $$n, d$$ in this equation are integers because in general scalar multiplication is not well-defined for 
 modular addition. So, $$n$$ and $$d$$ are interpreted in the typical group theory context as a $$n$$ and $$d$$ summand with negatives representing inverses. 
 
-<img src="/assets/img/line_in_torus.png" alt="drawing" width="300" style="display: block; margin: 0 auto"/>
+<img src={{'/assets/img/line_in_torus.png' | relative_url}} alt="drawing" width="300" style="display: block; margin: 0 auto"/>
 
 Rearranging this formula, I get 
 
