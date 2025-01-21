@@ -12,7 +12,7 @@ author: David Kyle
 In a cold open for the show The Office, the cast watches the bouncing DVD logo on a TV screen while their boss, uaware of the screensaver behind him, rambles on at a team meeting. 
 The character, Pam, is convinced that she once saw the logo perfectly slot into the corner of the screen. After a few near misses, the logo finally hits the corner and the cast cheers in excitement. 
 
-![office](/assets/img/office_bouncing_logo.gif){: .mx-auto.d-block :}
+![office]({{'/assets/img/office_bouncing_logo.gif' | relative_url}}){: .mx-auto.d-block :}
 
 
 This cast is not the first to be mesmerized by the DVD screensaver. The question about the path of a bouncing object in a rectangle first came up in the context of billiards. 
