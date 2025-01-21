@@ -42,7 +42,7 @@ to the right is at the same position as a point at $$w/2$$ moving to the left, t
 and the second one already in the second half of the trip being distance $$\frac {3w}2$$ from the starting point. The addition operator modulo $$2w$$ represents the location of the point with the 
 sum of the two distances. 
 
-<img src={{'/assets/img/back_and_forth.png' | relative_url}} alt="drawing" width="300" style="display: block; margin: 0 auto"/>
+![]({{'assets/img/back_and_forth.png' | relative_url}}){: .mx-auto.d-block :}
 
 The horizontal movement case is simple. If the logo starts along the top edge, it will alternate between the top two corners. If it's along the bottom edge, it will alternate between the bottom two corners. 
 Otherwise, it never hits any corners. The vertical case is similar. 
