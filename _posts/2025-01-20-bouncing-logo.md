@@ -71,7 +71,7 @@ $$n(x - x_0) = d(y - y_0)$$
 where the operation is real addition modulo 2. It's important that the coefficients $$n, d$$ in this equation are integers because in general scalar multiplication is not well-defined for 
 modular addition. So, $$n$$ and $$d$$ are interpreted in the typical group theory context as a $$n$$ and $$d$$ summand with negatives representing inverses. 
 
-<img src={{'/assets/img/line_in_torus.png' | relative_url}} alt="drawing" width="300" style="display: block; margin: 0 auto"/>
+![]({{'/assets/img/line_in_torus.png' | relative_url}}){: .mx-auto.d-block :}
 
 Rearranging this formula, I get 
 
