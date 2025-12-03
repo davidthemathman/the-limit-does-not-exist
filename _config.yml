@@ -207,9 +207,12 @@ exclude:
   - screenshot.png
   - docs/
   - vendor
+  - "*.qmd"
+  - "_freeze/"
 
 plugins:
   - jekyll-paginate
   - jekyll-sitemap
 
-
+editor:
+  render-on-save: true
