@@ -1,0 +1,241 @@
+---
+title: Brownian Motion with Drift
+date: 2025-12-03T00:00:00.000Z
+layout: post
+format:
+  gfm:
+    from: markdown+tex_math_single_backslash
+    variant: +tex_math_dollars+yaml_metadata_block
+    html-math-method: mathjax
+mathjax: true
+---
+
+
+Stochastic time series distributions like the Wiener process and
+Ornstein-Uhlenbeck process are important tools for modeling the
+probability distributions of time series data (weather, finance, etc.).
+However, working with these distributions which reside in
+infinite-dimensional function spaces is challenging and doesn’t always
+yield tractable results.
+
+Time series distributions don’t have a probability density function
+relative to the Lebesgue measure, but you can derive likelihood ratios
+by comparing 2 distributions in similar infinite dimensional spaces by
+using the Radon-Nikodym derivative.
+
+Having this function provides valuable and makes it easier to reason
+about the parameters governing these processes.
+
+------------------------------------------------------------------------
+
+## A Simple Example
+
+Brownian motion, i.e. the Wiener process, is the most basic stochastic
+process and is a good starting point for understanding stochastic time
+series distributions.
+
+Let $X_t  = \mu t + \sigma W_t$ be a Brownian motion with drift $\mu$
+and volatility $\sigma.$
+
+The goal is to infer information about the parameter $\mu$ from an
+observed path $x(t)$.
+
+To calculate the Radon-Nikodym derivative, I will use a scaled Wiener
+process $Y_t = \sigma W_t$ as the reference distribution (I’ll explain
+why I don’t use the original Wiener process later on).
+
+## Radon-Nikodym Derivative
+
+The strategy is to take the limit of the ratio of probabilities under
+the two measures closing in on a single function $x(t)$. In particular,
+I’ll take the set of the paths that match $x(t)$ at $N$ points and
+increase the number of points driving the delta between time steps to
+zero.
+
+Let $x_0 = x(0) = 0$ and $x_N = x(T)$. Then the set of paths that match
+$x(t)$ at $N$ points is given by: $$
+x_n = x(n\Delta t) \text{ for } n = 0, 1, \ldots, N
+$$
+
+where $\Delta t = T/N$.
+
+### Probability Under $X_t$
+
+The probability of observing a set of points $x_0, x_1, \ldots, x_N$
+under the distribution for $X_t$ is given by:
+
+$$
+  p_X(x_0, x_1, \ldots, x_N) = \prod_{n=1}^{N} p_X(x_n | x_{n-1})
+$$
+
+because the process is Markovian, and each step is given by a Gaussian
+distribution so that
+
+$$
+  p_X(x_n | x_{n-1}) = \frac{1}{\sqrt{2\pi \Delta t \sigma^2}} \exp\left( -\frac{(x_n - x_{n-1} - \mu \Delta t)^2}{2\Delta t \sigma^2} \right)
+$$
+
+All together you get:
+
+$$
+  p_X(x_0, x_1, \ldots, x_N) = \prod_{n=1}^{N} \frac{1}{\sqrt{2\pi \Delta t \sigma^2}} \exp\left( -\frac{(x_n - x_{n-1} - \mu \Delta t)^2}{2\Delta t \sigma^2} \right)
+$$ $$
+   = \frac{1}{(2\pi \Delta t \sigma^2)^{N/2}} \exp\left( -\frac{1}{2\Delta t\sigma^2} \sum_{n=1}^{N} (\Delta x_n - \mu \Delta t)^2 \right)
+$$
+
+where $\Delta x_n = x_n - x_{n-1}$.
+
+### Probability Under Reference Distribution $Y_t$
+
+By a similar argument the probability of observing a set of points
+$x_0, x_1, \ldots, x_N$ under the distribution for $Y_t$ is given by:
+
+$$
+  p_Y(x_0, x_1, \ldots, x_N) = \prod_{n=1}^{N} \frac{1}{\sqrt{2\pi \Delta t \sigma^2}} \exp\left( -\frac{(\Delta x_n)^2}{2\Delta t \sigma^2} \right)
+$$ $$
+   = \frac{1}{(2\pi \Delta t \sigma^2)^{N/2}} \exp\left( -\frac{1}{2\Delta t \sigma^2} \sum_{n=1}^{N} (\Delta x_n)^2 \right)
+$$
+
+*Note: technically the above values are probability densities, not
+probabilities, but it’s appropriate to use the density here because the
+we are working with the limiting behavior of the ratio of
+probabilities.*
+
+### Likelihood Ratio
+
+The Radon-Nikodym derivative is just the limit of the ratio of the two
+probabilities as $\Delta t \to 0$:
+
+Normalizations cancel:
+
+$$
+\frac{p_X}{p_Y} 
+= \exp\left\{ -\frac{1}{2\sigma^2 \Delta t} \sum_{n=1}^N \left[ (\Delta x_n - \mu\Delta t)^2 - (\Delta x_n)^2 \right] \right\}.
+$$
+
+Expand inside sum:
+
+$$
+(\Delta x_n - \mu\Delta t)^2 - (\Delta x_n)^2 = -2\mu\Delta t \, \Delta x_n + \mu^2 (\Delta t)^2.
+$$
+
+Sum over $n=1$ to $N$: $$
+\sum_{n=1}^N \left[ -2\mu\Delta t \, \Delta x_n + \mu^2 (\Delta t)^2 \right] 
+= -2\mu\Delta t \sum_{n=1}^N \Delta x_n + N\mu^2 (\Delta t)^2.
+$$ $$
+= -2\mu\Delta t (x_N - x_0) + N\mu^2 (\Delta t)^2.
+$$
+
+Divide by $2\sigma^2 \Delta t$ in the exponent:
+
+$$
+-\frac{1}{2\sigma^2\Delta t} \left[ -2\mu\Delta t (x_N - x_0) + N\mu^2 (\Delta t)^2 \right]
+$$ $$
+= \frac{ \mu (x_N - x_0) }{\sigma^2} - \frac{N\mu^2 \Delta t}{2\sigma^2}.
+$$
+
+Final ratio: $$
+\frac{p_X}{p_Y} = \exp\left[ \frac{\mu}{\sigma^2} (x_N - x_0) - \frac{\mu^2}{2\sigma^2} N\Delta t \right].
+$$
+
+Since $N \Delta t = T$ (total time) and $x_N = x(T)$ and
+$x_0 = x(0) = 0$, we can write:
+
+$$
+\boxed{\frac{dP_{X_t | \mu}}{dP_{Y_t}}(x) = \exp\left[ \frac{\mu}{\sigma^2} x(T) - \frac{\mu^2 T}{2\sigma^2} \right]}
+$$
+
+While not a true probability density function, this likelihood ratio is
+still a useful tool for gaining insights on the parameter distribution
+for $\mu$.
+
+------------------------------------------------------------------------
+
+## Insights
+
+In this case the likelihood ratio only depends on the final term $x(T)$
+and not the path itself.
+
+### Maximum Likelihood Estimation
+
+If we treat the Radon–Nikodym derivative as the likelihood for $\mu$
+given the continuous path observation $x(t)$, we can derive the MLE
+directly in the continuous-time setting.
+
+Given observed $x_T$, the expression above is **proportional** to the
+probability density for $x_T$ under different $\mu$, up to a factor that
+does not depend on $\mu$.
+
+We can view it as:
+
+$$
+L(\mu \mid x_T) \propto \exp\left[ \frac{\mu}{\sigma^2} x_T - \frac{\mu^2 T}{2\sigma^2} \right].
+$$
+
+Maximize over $\mu$ with log likelihood (ignoring constants independent
+of $\mu$):
+
+$$
+\ell(\mu) = \frac{\mu}{\sigma^2} x_T - \frac{\mu^2 T}{2\sigma^2}.
+$$
+
+Differentiate w.r.t. $\mu$:
+
+$$
+\frac{d\ell}{d\mu} = \frac{x_T}{\sigma^2} - \frac{\mu T}{\sigma^2}.
+$$
+
+Set to zero:
+
+$$
+\frac{x_T}{\sigma^2} - \frac{\mu T}{\sigma^2} = 0
+$$ $$
+\Rightarrow \mu = \frac{x_T}{T}.
+$$
+
+Check second derivative:
+
+$$
+\frac{d^2\ell}{d\mu^2} = -\frac{T}{\sigma^2} < 0,
+$$ so it’s a maximum.
+
+$$
+\boxed{\hat{\mu}_{\text{MLE}} = \frac{x_T}{T}}
+$$
+
+This result matches basic intuition of $\mu$ being the rough slope of
+the path.
+
+### Variance of the MLE
+
+How much would we expect the MLE to deviate from the true value of
+$\mu$? Since $X_t$ is a Wiener process the variance of the last point
+$x_T$ is $T \sigma^2$ with mean $\mu T$, meaning that the scaled term
+$\frac{x_T}{T}$ is normally distributed with mean $\mu$ and variance
+$\frac{\sigma^2}{\sqrt{T}}$.
+
+So, $x_T / T$ is an unbiased estimator of $\mu$ and the uncertainty of
+the estimate is inversely proportional to the square root of the time
+similar to how the uncertainty of a sample mean is inversely
+proportional to the square root of its sample size.
+
+### What about $\sigma^2$?
+
+Can we derive the MLE for $\sigma^2$?
+
+Unfortunately, the reference distribution $Y_t$ is assumed to have the
+same variance parameter as $X_t$ so the Radon-Nikodym derivative does
+not does not provide us any useful information on how $\sigma^2$ affects
+the likelihood of the observed path, and we shouldnt expect it to!
+
+Recall how we took the limit of the ratio of probabilities as
+$\Delta t \to 0$? When both the primary and reference distributions
+contained the same variance parameter, the normalization factors cancel
+out, allowing us to essentially take an infinite product. If one of the
+distributions had a different parameter, the ratio of the normalization
+factors would sky-rocket or collapse to zero.
+
+### Up Next
+
+In the next post, I’ll look at how to apply this technique to the
+Ornstein-Uhlenbeck process.
